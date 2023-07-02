@@ -5,7 +5,25 @@ from paises.models import Capital, Continente, Lenguaje, Moneda, Pais
 from dotenv import load_dotenv
 import os
 load_dotenv()
+from redis import Redis
+from functools import wraps
+import json
+from datetime import timedelta
 
+redis_client = Redis(host=os.getenv('REDIS_HOST'), port=os.getenv('REDIS_PORT'), db=os.getenv('REDIS_DB'))
+
+def cache_results(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        cache_key = f"{func.__name__}:{json.dumps(args)}:{json.dumps(kwargs)}"
+        cached_result = redis_client.get(cache_key)
+        if cached_result:
+            return json.loads(cached_result)
+        else:
+            result = func(*args, **kwargs)
+            redis_client.setex(cache_key, timedelta(hours=int(os.getenv('TIME_CACHE'))), json.dumps(result))
+            return result
+    return wrapper
 
 
 def get_or_create(model, **kwargs):
@@ -18,7 +36,7 @@ def get_or_create(model, **kwargs):
         session.commit()
         return instance
 
-
+@cache_results
 def obtener_paises_desde_api():
     print("Ejecutando tarea obtener paises desde api")
     url = os.getenv('API_URL')
