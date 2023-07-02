@@ -59,4 +59,6 @@ Para el punto 2, ya existe la generacion del excel, y tenemos a celery para ejec
 
 Me hubiese gustado armar en docker el worker de celery para que se ejecute automaticamente, considero que deberia ser lo ideal.
 
+Dato importante, me falto crear test automatizados con pytest, donde deberia probar los flujos de ejecucion de cada endpoint y a su vez testear el script que le pega a endpoints externos (Esto iria mockeado para no pegarle a servicios externos).
+
 
