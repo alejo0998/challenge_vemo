@@ -44,6 +44,9 @@ Ahora respecto al script que nos da los datos de los paises.
 Para este requerimiento utilice Celery para ejecutar las tareas asincronas y redis como worker.
 Lo que esta haciendo Celery es ejecutar esa tarea programada cada 12 horas, y cargar los paises en la base de datos. Unicamente esta cargando los nuevos datos, esto es por una cuestion de tiempo, si tuviese mas margen de tiempo haria los updates en los casos que haya cambios, en algun pais.
 
+celery -A celery_worker worker --loglevel=info -> Ejecutamos este comando para dejar corriendo celery, en el directorio raiz. 
+
+
 Respecto a lo que es la cache, utilice como cache a redis, donde lo setie en 25 horas. Por lo cual cada 25 horas va a volver a consumir el endpoint externo. Mientras, devuelve los datos que ya tenemos cacheados.
 
 Despues respecto a los puntos opcionales, por una cuestion de tiempo no los puedo resolver.
@@ -54,5 +57,6 @@ Despues respecto a los puntos opcionales, por una cuestion de tiempo no los pued
 Pero para el punto 1, agregaria otro endpoint donde le pasaria el pais y le pediria las actividades y esto me devolveria una lista de lo que tenga disponible. Estas actividades estimo que las cargaria del endpoint externo utilizado anteriormente.PO2
 Para el punto 2, ya existe la generacion del excel, y tenemos a celery para ejecutar las tareas asincronas, crearia un worker que se encargue de enviar esos emails, utilizando alguna libreria de email, y que me los envie asincronicamente para no afectar al flujo de ejecucion.
 
+Me hubiese gustado armar en docker el worker de celery para que se ejecute automaticamente, considero que deberia ser lo ideal.
 
 
