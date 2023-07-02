@@ -15,6 +15,9 @@ Luego ejecutar el siguiente comando para crear dejar ejecutando postgres y redis
 
 docker-compose up --build
 
+Para correr el servidor 
+
+uvicorn main:app --reload
 
 Respecto a la solucion. 
 En cuanto al modelado de datos, defini un Pais el cual tiene nombre, poblacion y bandera.
