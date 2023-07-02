@@ -1,8 +1,12 @@
 import requests
 from fastapi import status
 from db import session
-
 from paises.models import Capital, Continente, Lenguaje, Moneda, Pais
+from dotenv import load_dotenv
+import os
+load_dotenv()
+
+
 
 def get_or_create(model, **kwargs):
     instance = session.query(model).filter_by(**kwargs).first()
@@ -16,7 +20,8 @@ def get_or_create(model, **kwargs):
 
 
 def obtener_paises_desde_api():
-    url = "https://restcountries.com/v3.1/all"
+    print("Ejecutando tarea obtener paises desde api")
+    url = os.getenv('API_URL')
     response = requests.get(url)
     if response.status_code == status.HTTP_200_OK:
         paises = response.json()
@@ -50,8 +55,11 @@ def obtener_paises_desde_api():
                           'lenguajes': lenguajes
                           }
             crear_pais(datos_pais, datos_pais.get('nombre'))
+        print("Finalizando la creacion de paises")
+
     else:
         print("Error al obtener los datos de los países desde la API")
+
 
 def crear_pais(datos_pais, filtro):
     instance = session.query(Pais).filter_by(nombre=filtro).first()
